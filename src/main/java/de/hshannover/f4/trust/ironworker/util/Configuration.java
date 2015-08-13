@@ -38,6 +38,10 @@
  */
 package de.hshannover.f4.trust.ironworker.util;
 
+/**
+ * @author Bastian Hellmann
+ *
+ */
 public class Configuration {
 
 	private Configuration() {
@@ -80,4 +84,39 @@ public class Configuration {
 	public static final String IFMAP_AUTHENTICATION_METHOD_BASIC = "basic";
 	public static final String IFMAP_AUTHENTICATION_METHOD_CERT = "cert";
 
+	public static final String KEY_SUBSCRIPTION_NAME = "ironworker.subscription.name";
+	public static final String DEFAULT_VALUE_SUBSCRIPTION_NAME = "ironworker-sub";
+
+	public static final String KEY_SUBSCRIPTION_IDENTIFIER_TYPE = "ironworker.subscription.identifier.type";
+	public static final String DEFAULT_VALUE_SUBSCRIPTION_IDENTIFIER_TYPE = "device";
+
+	public static final String KEY_SUBSCRIPTION_IDENTIFIER_VALUE = "ironworker.subscription.identifier.value";
+	public static final String DEFAULT_VALUE_SUBSCRIPTION_IDENTIFIER_VALUE = "freeradius-pdp";
+
+	public static final String KEY_SUBSCRIPTION_MAXDEPTH = "ironworker.subscription.maxDepth";
+	public static final int DEFAULT_VALUE_SUBSCRIPTION_MAXDEPTH = 10;
+
+	public static final String KEY_SUBSCRIPTION_MAXSIZE = "ironworker.subscription.maxSize";
+	public static final int DEFAULT_VALUE_SUBSCRIPTION_MAXSIZE = 1000000;
+
+	public static final String KEY_SUBSCRIPTION_MATCHLINKS = "ironworker.subscription.matchLinks";
+	public static final String DEFAULT_VALUE_SUBSCRIPTION_MATCHLINKS = null;
+
+	public static final String KEY_SUBSCRIPTION_RESULTFILTER = "ironworker.subscription.resultFilter";
+	public static final String DEFAULT_VALUE_SUBSCRIPTION_RESULTFILTER = null;
+
+	public static final String KEY_REACTIONS_LOG_ACTIVE = "ironworker.reactions.log.active";
+	public static final boolean DEFAULT_VALUE_REACTIONS_LOG_ACTIVE = true;
+
+	public static final String KEY_REACTIONS_PUBLISH_ACTIVE = "ironworker.reactions.publish.active";
+	public static final boolean DEFAULT_VALUE_REACTIONS_PUBLISH_ACTIVE = true;
+
+	public static final String KEY_REACTIONS_PUBLISH_NOTIFY = "ironworker.reactions.publish.notify";
+	public static final boolean DEFAULT_VALUE_REACTIONS_PUBLISH_NOTIFY = true;
+
+	public static final String KEY_REACTIONS_RUNSCRIPT_ACTIVE = "ironworker.reactions.runscript.active";
+	public static final boolean DEFAULT_VALUE_REACTIONS_RUNSCRIPT_ACTIVE = false;
+
+	public static final String KEY_REACTIONS_RUNSCRIPT_SCRIPT = "ironworker.reactions.runscript.script";
+	public static final String DEFAULT_VALUE_REACTIONS_RUNSCRIPT_SCRIPT = "foo.sh";
 }

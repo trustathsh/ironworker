@@ -38,10 +38,18 @@
  */
 package de.hshannover.f4.trust.ironworker;
 
-import org.apache.log4j.Logger;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.hshannover.f4.trust.ironcommon.properties.Properties;
 import de.hshannover.f4.trust.ironworker.ifmap.IfmapController;
+import de.hshannover.f4.trust.ironworker.reactions.LogReaction;
+import de.hshannover.f4.trust.ironworker.reactions.PublishReaction;
+import de.hshannover.f4.trust.ironworker.reactions.Reaction;
+import de.hshannover.f4.trust.ironworker.reactions.RunScriptReaction;
 import de.hshannover.f4.trust.ironworker.util.Configuration;
 
 /**
@@ -55,9 +63,13 @@ public final class Main {
 
 	private static final String VERSION = "${project.version}";
 
-	private static final Logger LOGGER = Logger.getLogger(Main.class);
+	private static final Logger LOGGER = LogManager.getLogger(Main.class);
 
 	private static Properties configuration;
+
+	private static IfmapController controller;
+
+	private static ResultHandler handler;
 
 	/**
 	 * Empty private constructor since everything is static in this class
@@ -66,10 +78,7 @@ public final class Main {
 	}
 
 	/**
-	 * An exemplary IF-MAP client.
-	 * Uses YAML-configuration file, creates a new MAP server connection,
-	 * publishes some vendor-specific metadata and extended identifiers,
-	 * then searches for this data on the MAPS and prints the data.
+	 * Creates all objects and starts all threads.
 	 *
 	 * @param args
 	 *            command line arguments (not used)
@@ -78,13 +87,45 @@ public final class Main {
 		LOGGER.info("Starting ironworker version "
 				+ VERSION);
 
-		IfmapController controller = new IfmapController();
+		handler = new ResultHandler();
+		Thread handlerThread = new Thread(handler, "ResultHandler-thread");
+		handlerThread.start();
+
+		getIfmapController();
+
+		handler.setReactions(loadReactions());
+
 		controller.start();
-		controller.publish();
-		controller.search();
-		controller.stop();
 	}
 
+	private static List<Reaction> loadReactions() {
+		List<Reaction> result = new ArrayList<>();
+
+		if (configuration.getBoolean(Configuration.KEY_REACTIONS_LOG_ACTIVE,
+				Configuration.DEFAULT_VALUE_REACTIONS_LOG_ACTIVE)) {
+			result.add(new LogReaction());
+		}
+
+		if (configuration.getBoolean(Configuration.KEY_REACTIONS_PUBLISH_ACTIVE,
+				Configuration.DEFAULT_VALUE_REACTIONS_PUBLISH_ACTIVE)) {
+			boolean notify = configuration.getBoolean(Configuration.KEY_REACTIONS_PUBLISH_NOTIFY,
+					Configuration.DEFAULT_VALUE_REACTIONS_PUBLISH_NOTIFY);
+			result.add(new PublishReaction(notify));
+		}
+
+		if (configuration.getBoolean(Configuration.KEY_REACTIONS_RUNSCRIPT_ACTIVE,
+				Configuration.DEFAULT_VALUE_REACTIONS_RUNSCRIPT_ACTIVE)) {
+			String script = configuration.getString(Configuration.KEY_REACTIONS_RUNSCRIPT_SCRIPT,
+					Configuration.DEFAULT_VALUE_REACTIONS_RUNSCRIPT_SCRIPT);
+			result.add(new RunScriptReaction(script));
+		}
+
+		return result;
+	}
+
+	/**
+	 * @return configuration of ironworker as a {@link Properties} object
+	 */
 	public static Properties getConfiguration() {
 		if (configuration == null) {
 			LOGGER.info("Loading configuration file: "
@@ -93,6 +134,13 @@ public final class Main {
 		}
 
 		return configuration;
+	}
+
+	public static IfmapController getIfmapController() {
+		if (controller == null) {
+			controller = new IfmapController(handler);
+		}
+		return controller;
 	}
 
 }

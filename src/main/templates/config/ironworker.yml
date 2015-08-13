@@ -28,3 +28,39 @@ ironworker:
         path: /keystore/ironworker.jks
         # password of the keystore
         password: ironworker
+  #
+  subscription:
+    #
+    name: ironworker-sub
+    #
+    identifier:
+      #
+      type: device
+      #
+      value: freeradius-pdp
+    #
+    maxDepth: 10
+    #
+    maxSize: 1000000
+    #
+    matchLinks:
+    #
+    resultFilter:
+  #
+  reactions:
+    #
+    log:
+      #
+      active: true
+    #
+    publish:
+      #
+      active: true
+      #
+      notify: false
+    #
+    runscript:
+      #
+      active: true
+      #
+      script: foo.sh
