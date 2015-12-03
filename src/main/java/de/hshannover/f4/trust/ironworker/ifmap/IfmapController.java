@@ -42,6 +42,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.hshannover.f4.trust.ifmapj.IfmapJ;
+import de.hshannover.f4.trust.ifmapj.binding.IfmapStrings;
 import de.hshannover.f4.trust.ifmapj.channel.SSRC;
 import de.hshannover.f4.trust.ifmapj.config.BasicAuthConfig;
 import de.hshannover.f4.trust.ifmapj.config.CertAuthConfig;
@@ -279,6 +280,12 @@ public class IfmapController {
 		subscribeUpdate.setMaxSize(mSubscriptionMaxSize);
 		subscribeUpdate.setMatchLinksFilter(mSubscriptionMatchLinksFilter);
 		subscribeUpdate.setResultFilter(mSubscriptionResultFilter);
+
+		subscribeUpdate.addNamespaceDeclaration(IfmapStrings.BASE_PREFIX,
+				IfmapStrings.BASE_NS_URI);
+		subscribeUpdate.addNamespaceDeclaration(
+				IfmapStrings.STD_METADATA_PREFIX,
+				IfmapStrings.STD_METADATA_NS_URI);
 
 		synchronized (mSsrc) {
 			try {
